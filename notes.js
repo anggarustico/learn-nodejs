@@ -232,7 +232,21 @@ var today = require('./today');
             
 //Authentication in Node.js
 
+//Suggested Express folder structure
 
+    //Project
+        //node_modules
+            //Contains modules yang dibutuhkan current modules
+        //config
+            //Contains configuration files such as
+                //Database connections
+                //Environment variables
+                //Credential files including API keys
+        //models
+        //routes
+        //views
+        //public
+        
 
 
 
