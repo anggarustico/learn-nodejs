@@ -194,7 +194,7 @@ var today = require('./today');
     //1. APIs with Express
         //sebuah express API itu menyiapkan HTTP interface untuk berinteraksi dengan data layer aplikasi
         //Data dikirimkan kembali ke client dengan format JSON using a response or res object
-        //res,JSON() method berfungsi untuk
+        //res.JSON() method berfungsi untuk
             //Memberitahu client content type yang dikirimkan
             //Stringify data
 
@@ -231,6 +231,20 @@ var today = require('./today');
         })
             
 //Authentication in Node.js
+    //Setelah belajar ini, harusnya dapat paham
+        //Define authentication
+        //Explain session based, token based, and passwordless authentication
+        //Membandingkan dan membedakan antara 3 jenis authentication
+    
+    //Session Based
+        //1. User memasukan data mereka
+        //2. Credentials yang dimasukkan diverifikasi dengan credentials yang ada di database
+        //3. Server menciptakan session with a session ID yang encrypted string yang unik. Session id disimpan di dalam database
+        //4. Session ID disimpan juga di dalam browser sebagai cookie
+        //5. Saat user log out atau waktu yang telah ditentukan abis, session ID tersebut dihilangkan dari database dan browser
+
+    //Token Based
+        //
 
 //Suggested Express folder structure
 
@@ -248,6 +262,14 @@ var today = require('./today');
         //public
         
 
+//Learn Final Project
+
+//index.js
+const express = require('express'); //Menggunakan module express
+const jwt = require('jsonwebtoken'); //Menggunakan jsonwebtoken, buat autentikasi JSON file
+const session = require('express-session'); //Menggunakan module express-session
+const customer_routes = require('./router/auth_users.js').authenticated; //Membuat route user yang sudah terautentikasi
+const genl_routes = require
 
 
 
