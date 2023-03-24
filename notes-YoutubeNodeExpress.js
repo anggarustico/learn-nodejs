@@ -1,4 +1,4 @@
-//First module
+/*First module
 
 //console.log(module)
 console.log(module)
@@ -61,8 +61,9 @@ writeFileSync('./path/newFile.txt', 'Hello World')
 //FS Module Async
 const { readFile, writeFile } = require('fs')
     //lanjut nanti dah
+*/
 
-//HTTP Modules
+/*HTTP Modules
     const http = require('http') //Menggunakan HTTP Modules
 
     const server = http.createServer((req, res)=>{
@@ -97,8 +98,9 @@ const { readFile, writeFile } = require('fs')
         }
 
     }
+    */
 
-//Contoh Event Programming in JS
+/*Contoh Event Programming in JS
     const EventEmitter = require('events') //Menggunakan modules events untuk melakukan event programming
 
     const customEmitter = new EventEmitter() //Menciptakan object baru kalo mau ada custom emit
@@ -125,8 +127,9 @@ const { readFile, writeFile } = require('fs')
     })
 
     server.listen(5000)
+    */
 
-//Contoh createReadStream
+/*Contoh createReadStream
 
     const { createReadStream } = require('fs')
 
@@ -155,7 +158,121 @@ const { readFile, writeFile } = require('fs')
             res.end(err)
         })
     })
+    */
 
+/* HTTP RESPONSE
+const http = require('http')
+
+const server = http.createServer((req, res) => {
+    console.log(req)
+    res.writeHead(200, { 'content-type': 'text/html'})
+    res.write('<h1>Welcome</h1>')
+    res.end()
+})
+
+server.listen(5000)
+*/
+
+/* HTTP If else Request
+const http = require('http')
+
+const server = http.createServer((req, res) => {
+    const url = req.url
+
+    if(url === '/'){
+        res.writeHead(200, { 'content-type': 'text/html'})
+        res.write('<h1>Home Page</h1>')
+        res.end()
+    }
+    else if(url === '/about'){
+        res.writeHead(200, { 'content-type': 'text/html'})
+        res.write('<h1>About Page</h1>')
+        res.end()
+    }
+    else {
+        res.writeHead(404, { 'content-type': 'text/html'})
+        res.write('<h1>Not Found</h1>')
+        res.end()
+    }
+})
+
+server.listen(5000)
+*/
+
+/* HTTP Files
+const http = require('http')
+const { readFileSync } = require('fs')
+
+const server = http.createServer((req, res) => {
+    const homePage = readFileSync('./index.html', 'utf8')
     
+    const url = req.url
 
+    if(url === '/'){
+        res.writeHead(200, { 'content-type': 'text/html'})
+        res.write(homePage)
+        res.end()
+    }
+    else if(url === '/about'){
+        res.writeHead(200, { 'content-type': 'text/html'})
+        res.write('<h1>About Page</h1>')
+        res.end()
+    }
+    else {
+        res.writeHead(404, { 'content-type': 'text/html'})
+        res.write('<h1>Not Found</h1>')
+        res.end()
+    }
+})
+
+server.listen(5000)
+*/
+
+/*Menampilkan navbar-app
+
+const http = require('http')
+const { readFileSync } = require('fs')
+
+const homePage = readFileSync('./navbar-app/index.html', 'utf8')
+const homeStyle = readFileSync('./navbar-app/styles.css', 'utf8')
+const homeLogo = readFileSync('./navbar-app/logo.svg', 'utf8')
+const homeApp = readFileSync('./navbar-app/browser-app.js', 'utf8')
+
+const server = http.createServer((req, res) => {
+    const url = req.url
+
+    if(url === '/'){
+        res.writeHead(200, { 'content-type': 'text/html'})
+        res.write(homePage)
+        res.end()
+    }
+    else if(url === '/styles.css'){
+        res.writeHead(200, { 'content-type': 'text/css'})
+        res.write(homeStyle)
+        res.end()
+    }
+    else if(url === '/logo.svg'){
+        res.writeHead(200, { 'content-type': 'image/svg+xml'})
+        res.write(homeLogo)
+        res.end()
+    }
+    else if(url === '/browser-app.js'){
+        res.writeHead(200, { 'content-type': 'text/javascript'})
+        res.write(homeApp)
+        res.end()
+    }
+    else if(url === '/about'){
+        res.writeHead(200, { 'content-type': 'text/html'})
+        res.write('<h1>About Page</h1>')
+        res.end()
+    }
+    else {
+        res.writeHead(404, { 'content-type': 'text/html'})
+        res.write('<h1>Not Found</h1>')
+        res.end()
+    }
+})
+
+server.listen(5000)
+*/
 

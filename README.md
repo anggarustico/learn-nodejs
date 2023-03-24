@@ -267,8 +267,44 @@ const server = http.createServer((req, res) => {
 server.listen(5000)
 ```
 
+## Express
 
+### Express Basic
 
+Express merupakan sebuah framework yang memudahkan http server yang tadi baru dipelajari
+Express bukan sebuat built in module, jadi harus diinstall dulu dengan
+``npm install express --save``
 
+Kalau sudah diinstall, di codenya direquire dengan syntax
+```
+const express = require('express')
+const app = express()
+```
 
+Di dalam express module ada beberapa method yang berguna, antara lain
+- app.get
+- app.post
+- app.put
+- app.delete
+- app.all
+- app.use
+- app.listen
 
+#### app.listen
+
+app.listen digunakan seperti server.listen(). Digunakan untuk komunikasi dengan port communication tertentu. Dan ada callback function yang digunakan untuk dijalankan ketika komunikasi itu terjalin, syntaxnya seperti berikut
+```
+app.listen(5000, () => {
+    console.log('Server is listening on port 5000...')
+})
+```
+
+#### app.get
+
+app.get itu sama kaya client sedang merequest get dengan url tertentu. Syntaxnya seperti berikut
+```
+app.get('/', (req, res) => {
+    console.log('Success')
+    res.end('Home Page')
+})
+```
