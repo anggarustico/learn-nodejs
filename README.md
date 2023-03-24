@@ -130,6 +130,7 @@ Untuk create http server, pasti menggunakan module http
 
 2. Create server
 http.createServer() yaitu sebuah method dalam http module yang digunakan untuk membuat server. Pada method ini parameternya adalah sebuah callback function. Di function tersebut ada dua parameter yang digunakan, sebuah request (req) dan respond (res), yang digunakan untuk mendapatkan request dari user dan memberikan respond dari server.
+Di createServer() juga diharuskan ada res.end(), dikarenakan untuk mewajibkan ada respon terakhir dari server ke client
 ```
 const server = http.createServer((req, res) => {
         console.log('User hit the server)
@@ -137,5 +138,137 @@ const server = http.createServer((req, res) => {
 })
 ```
 3. Listening to the Server
-Setelah server telah di create, selanjutnya adalah menggunakan method server.
+Setelah server telah di create, selanjutnya adalah menggunakan method server.listen(portNum)
+Port Number adalah sebuah komunikasi end point. Buat localhost kali ini bebas
+``server.listen(5000)``
+
+## HTTP Headers
+
+Jika client ada yang dateng ke server, maka harus ada header mengenai info server tersebut atau metadata. syntax untuk merespon http header adalah ``res.writeHead(statusCode, { 'content-type': 'text/html' })``
+``res.writeHead(200, { 'content-type': 'text/html'} )``
+
+Status code dan content-type ini berpengaruh terhadap respon yang akan diberikan server ke client. Kita tidak perlu menghafalkan lebih lanjut mengenai http headers, karena biasanya akan otomatis
+
+## HTTP Request Object
+
+Setelah udah bisa ngerespon, mari lanjut mengambil request dari user.
+Ada beberapa method dari req yang berguna, antara lain 
+``req.method``: Akan mengeluarkan Method apa yang di request oleh user, bisa GET, POST, dll
+``req.url``: Akan mengambil url apa yang di request oleh user, kalo hompage ``/``, kalo yang lain contoh ``/about``, dll
+
+Kita bisa membuat berbagai macam respond tergantung dengan url yang di req oleh user dengan if else biasa
+```
+const http = require('http')
+
+const server = http.createServer((req, res) => {
+    const url = req.url
+
+    if(url === '/'){
+        res.writeHead(200, { 'content-type': 'text/html'})
+        res.write('<h1>Home Page</h1>')
+        res.end()
+    }
+    else if(url === '/about'){
+        res.writeHead(200, { 'content-type': 'text/html'})
+        res.write('<h1>About Page</h1>')
+        res.end()
+    }
+    else {
+        res.writeHead(404, { 'content-type': 'text/html'})
+        res.write('<h1>Not Found</h1>')
+        res.end()
+    }
+})
+
+server.listen(5000)
+```
+
+## HTML Files
+
+Kita bisa merespon request dari client menggunakan sebuah file, menggunakan readFileSync atau yang Async juga bisa
+yang penting di metadata, content-typenya harus sesuai
+```
+const http = require('http')
+const { readFileSync } = require('fs')
+
+const server = http.createServer((req, res) => {
+    const homePage = readFileSync('./index.html', 'utf8')
+    
+    const url = req.url
+
+    if(url === '/'){
+        res.writeHead(200, { 'content-type': 'text/html'})
+        res.write(homePage)
+        res.end()
+    }
+    else if(url === '/about'){
+        res.writeHead(200, { 'content-type': 'text/html'})
+        res.write('<h1>About Page</h1>')
+        res.end()
+    }
+    else {
+        res.writeHead(404, { 'content-type': 'text/html'})
+        res.write('<h1>Not Found</h1>')
+        res.end()
+    }
+})
+
+server.listen(5000)
+```
+
+## HTTP App
+
+Tadi kita baru bisa membaca dan mengirimkan satu file html dari server ke client. Nah Bagaimana kalau client butuh html, css, dan js untuk diterima? Apa yang harus dilakukan server?
+Pertama yang pasti semua alamat dari file yang dibutuhkan harus ada responsenya, bukan 404. Kemudian tinggal tambahkan if else statementnya sesuai dengan kebutuhan
+```
+const http = require('http')
+const { readFileSync } = require('fs')
+
+const homePage = readFileSync('./navbar-app/index.html', 'utf8')
+const homeStyle = readFileSync('./navbar-app/styles.css', 'utf8')
+const homeLogo = readFileSync('./navbar-app/logo.svg', 'utf8')
+const homeApp = readFileSync('./navbar-app/browser-app.js', 'utf8')
+
+const server = http.createServer((req, res) => {
+    const url = req.url
+
+    if(url === '/'){
+        res.writeHead(200, { 'content-type': 'text/html'})
+        res.write(homePage)
+        res.end()
+    }
+    else if(url === '/styles.css'){
+        res.writeHead(200, { 'content-type': 'text/css'})
+        res.write(homeStyle)
+        res.end()
+    }
+    else if(url === '/logo.svg'){
+        res.writeHead(200, { 'content-type': 'image/svg+xml'})
+        res.write(homeLogo)
+        res.end()
+    }
+    else if(url === '/browser-app.js'){
+        res.writeHead(200, { 'content-type': 'text/javascript'})
+        res.write(homeApp)
+        res.end()
+    }
+    else if(url === '/about'){
+        res.writeHead(200, { 'content-type': 'text/html'})
+        res.write('<h1>About Page</h1>')
+        res.end()
+    }
+    else {
+        res.writeHead(404, { 'content-type': 'text/html'})
+        res.write('<h1>Not Found</h1>')
+        res.end()
+    }
+})
+
+server.listen(5000)
+```
+
+
+
+
+
 
