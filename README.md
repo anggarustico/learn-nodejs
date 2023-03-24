@@ -2,6 +2,13 @@
 
 Link Sumber [FCC Node JS and Express js](https://www.youtube.com/watch?v=Oe421EPjeBE&list=LL&index=8)
 
+## Learn From the Repo
+Jadi, dari Youtube course ini diberikan sebuah repo yaitu
+[Node.js Repo](https://github.com/john-smilga/node-express-course)
+
+Nah dari repo tersebut, terdapat beberapa code catetan untuk merefresh ingatan mengenai node.js
+Jika ingin menjalankan salah satu tutorial, khususnya di file ``01-node-tutorial``, code yang ada di file tutorial, di copas ke ``app.js``, lalu dijalankan.
+
 ## NPM info
 
 untuk memulai sebuah node js server, maka hal yang dilakukan adalah npm init
@@ -107,6 +114,28 @@ Server mengirimkan http messages berupa response ke user, menjawab request dari 
 Untuk lebih jelasnya mengenai http, dapat dilihat disini
 [Course API](https://course-api.com)
 
+## Create Server
 
+Untuk melanjutkan bagian ini, wajib clone repo node tutorial
+Kemudian masuk ke folder ``02-express-tutorial``
+Kemudian lanjut ``npm install`` untuk mendapatkan dependencies yang dibutuhkan
+Kemudian lanjut ``npm start``, jika di console log terdapat "Express Tutorial", maka tutorial sudah siap untuk dilanjutkan
 
+## HTTP Basic
+
+Untuk create server, dibutuhkan basic http seperti langkah berikut
+1. Require module http
+Untuk create http server, pasti menggunakan module http
+``const http = require('http')``
+
+2. Create server
+http.createServer() yaitu sebuah method dalam http module yang digunakan untuk membuat server. Pada method ini parameternya adalah sebuah callback function. Di function tersebut ada dua parameter yang digunakan, sebuah request (req) dan respond (res), yang digunakan untuk mendapatkan request dari user dan memberikan respond dari server.
+```
+const server = http.createServer((req, res) => {
+        console.log('User hit the server)
+        res.end('home page')
+})
+```
+3. Listening to the Server
+Setelah server telah di create, selanjutnya adalah menggunakan method server.
 
