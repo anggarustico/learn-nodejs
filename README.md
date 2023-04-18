@@ -3,11 +3,12 @@
 Link Sumber [FCC Node JS and Express js](https://www.youtube.com/watch?v=Oe421EPjeBE&list=LL&index=8)
 
 ## Learn From the Repo
+
 Jadi, dari Youtube course ini diberikan sebuah repo yaitu
 [Node.js Repo](https://github.com/john-smilga/node-express-course)
 
 Nah dari repo tersebut, terdapat beberapa code catetan untuk merefresh ingatan mengenai node.js
-Jika ingin menjalankan salah satu tutorial, khususnya di file ``01-node-tutorial``, code yang ada di file tutorial, di copas ke ``app.js``, lalu dijalankan.
+Jika ingin menjalankan salah satu tutorial, khususnya di file `01-node-tutorial`, code yang ada di file tutorial, di copas ke `app.js`, lalu dijalankan.
 
 ## NPM info
 
@@ -46,6 +47,7 @@ js itu blocking atau syncronus
 jadi dibacanya line per line sesuai urutannya
 Tapi di js ada yang namanya callback function
 Ada dua jenis function di js berdasarkan dijalankannya
+
 1. Imidiate function
 
 imidiate function ini adalah function yang tidak menjadi parameter di function lain
@@ -67,11 +69,11 @@ Contoh penggunaan async await ada di notes-YoutubeNodeExpress.js
 
 JS merupakan bahasa pemrograman yang event-driven programming. JS itu selalu berhubungan dengan event. Contoh penggunaan event ada di notes-YoutubeNodeExpress.js
 
-Pada event ini, ada dua fungsi krusial, yaitu ``.emit`` dan ``.on``
+Pada event ini, ada dua fungsi krusial, yaitu `.emit` dan `.on`
 
-``customEmitter.on`` digunakan untuk mendengarkan event yang menjadi parameter, dan terdapat callback function yang dijalankan setelah event tersebut dijalankan
+`customEmitter.on` digunakan untuk mendengarkan event yang menjadi parameter, dan terdapat callback function yang dijalankan setelah event tersebut dijalankan
 
-``customEmitter.emit`` digunakan untuk menjalankan atau memancarkan sebuah event
+`customEmitter.emit` digunakan untuk menjalankan atau memancarkan sebuah event
 
 ## Event in HTTP Modules
 
@@ -81,6 +83,7 @@ Contohnya ada di notes
 ## Streams
 
 Ada 4 tipe streams
+
 1. Writeable
 2. Readable
 3. Duplex
@@ -88,11 +91,11 @@ Ada 4 tipe streams
 
 ## Read file
 
-Jadi di stream ini untuk membaca file ada yang namanya ``createReadStream('path', {highWaterMark: <filesize>, encode: utf8})``
+Jadi di stream ini untuk membaca file ada yang namanya `createReadStream('path', {highWaterMark: <filesize>, encode: utf8})`
 
-``path`` = Untuk path file yang mau dibaca
-``highWaterMark: <filesize>`` = Untuk dibagi per chunck itu berapa maksimal kb-nya
-``encode: utf8`` = Untuk mengencode file dan dapat menampilkan file
+`path` = Untuk path file yang mau dibaca
+`highWaterMark: <filesize>` = Untuk dibagi per chunck itu berapa maksimal kb-nya
+`encode: utf8` = Untuk mengencode file dan dapat menampilkan file
 
 Jadi di stream read file ini, sebuah file tidak dibaca dalam satu file sekaligus, tetapi dibaca dalam per chunk, secara default satu chunk 64kb. Contoh penggunaan ada di notes.
 
@@ -103,6 +106,7 @@ Contoh penggunaannya ada di note
 ## HTTP Request/Response Cycle
 
 Jadi ada dua pihak dalam http cycle
+
 1. User/Client
 2. Server
 
@@ -117,46 +121,50 @@ Untuk lebih jelasnya mengenai http, dapat dilihat disini
 ## Create Server
 
 Untuk melanjutkan bagian ini, wajib clone repo node tutorial
-Kemudian masuk ke folder ``02-express-tutorial``
-Kemudian lanjut ``npm install`` untuk mendapatkan dependencies yang dibutuhkan
-Kemudian lanjut ``npm start``, jika di console log terdapat "Express Tutorial", maka tutorial sudah siap untuk dilanjutkan
+Kemudian masuk ke folder `02-express-tutorial`
+Kemudian lanjut `npm install` untuk mendapatkan dependencies yang dibutuhkan
+Kemudian lanjut `npm start`, jika di console log terdapat "Express Tutorial", maka tutorial sudah siap untuk dilanjutkan
 
 ## HTTP Basic
 
 Untuk create server, dibutuhkan basic http seperti langkah berikut
+
 1. Require module http
-Untuk create http server, pasti menggunakan module http
-``const http = require('http')``
+   Untuk create http server, pasti menggunakan module http
+   `const http = require('http')`
 
 2. Create server
-http.createServer() yaitu sebuah method dalam http module yang digunakan untuk membuat server. Pada method ini parameternya adalah sebuah callback function. Di function tersebut ada dua parameter yang digunakan, sebuah request (req) dan respond (res), yang digunakan untuk mendapatkan request dari user dan memberikan respond dari server.
-Di createServer() juga diharuskan ada res.end(), dikarenakan untuk mewajibkan ada respon terakhir dari server ke client
+   http.createServer() yaitu sebuah method dalam http module yang digunakan untuk membuat server. Pada method ini parameternya adalah sebuah callback function. Di function tersebut ada dua parameter yang digunakan, sebuah request (req) dan respond (res), yang digunakan untuk mendapatkan request dari user dan memberikan respond dari server.
+   Di createServer() juga diharuskan ada res.end(), dikarenakan untuk mewajibkan ada respon terakhir dari server ke client
+
 ```
 const server = http.createServer((req, res) => {
         console.log('User hit the server)
         res.end('home page')
 })
 ```
+
 3. Listening to the Server
-Setelah server telah di create, selanjutnya adalah menggunakan method server.listen(portNum)
-Port Number adalah sebuah komunikasi end point. Buat localhost kali ini bebas
-``server.listen(5000)``
+   Setelah server telah di create, selanjutnya adalah menggunakan method server.listen(portNum)
+   Port Number adalah sebuah komunikasi end point. Buat localhost kali ini bebas
+   `server.listen(5000)`
 
 ## HTTP Headers
 
-Jika client ada yang dateng ke server, maka harus ada header mengenai info server tersebut atau metadata. syntax untuk merespon http header adalah ``res.writeHead(statusCode, { 'content-type': 'text/html' })``
-``res.writeHead(200, { 'content-type': 'text/html'} )``
+Jika client ada yang dateng ke server, maka harus ada header mengenai info server tersebut atau metadata. syntax untuk merespon http header adalah `res.writeHead(statusCode, { 'content-type': 'text/html' })`
+`res.writeHead(200, { 'content-type': 'text/html'} )`
 
 Status code dan content-type ini berpengaruh terhadap respon yang akan diberikan server ke client. Kita tidak perlu menghafalkan lebih lanjut mengenai http headers, karena biasanya akan otomatis
 
 ## HTTP Request Object
 
 Setelah udah bisa ngerespon, mari lanjut mengambil request dari user.
-Ada beberapa method dari req yang berguna, antara lain 
-``req.method``: Akan mengeluarkan Method apa yang di request oleh user, bisa GET, POST, dll
-``req.url``: Akan mengambil url apa yang di request oleh user, kalo hompage ``/``, kalo yang lain contoh ``/about``, dll
+Ada beberapa method dari req yang berguna, antara lain
+`req.method`: Akan mengeluarkan Method apa yang di request oleh user, bisa GET, POST, dll
+`req.url`: Akan mengambil url apa yang di request oleh user, kalo hompage `/`, kalo yang lain contoh `/about`, dll
 
 Kita bisa membuat berbagai macam respond tergantung dengan url yang di req oleh user dengan if else biasa
+
 ```
 const http = require('http')
 
@@ -187,13 +195,14 @@ server.listen(5000)
 
 Kita bisa merespon request dari client menggunakan sebuah file, menggunakan readFileSync atau yang Async juga bisa
 yang penting di metadata, content-typenya harus sesuai
+
 ```
 const http = require('http')
 const { readFileSync } = require('fs')
 
 const server = http.createServer((req, res) => {
     const homePage = readFileSync('./index.html', 'utf8')
-    
+
     const url = req.url
 
     if(url === '/'){
@@ -220,6 +229,7 @@ server.listen(5000)
 
 Tadi kita baru bisa membaca dan mengirimkan satu file html dari server ke client. Nah Bagaimana kalau client butuh html, css, dan js untuk diterima? Apa yang harus dilakukan server?
 Pertama yang pasti semua alamat dari file yang dibutuhkan harus ada responsenya, bukan 404. Kemudian tinggal tambahkan if else statementnya sesuai dengan kebutuhan
+
 ```
 const http = require('http')
 const { readFileSync } = require('fs')
@@ -273,15 +283,17 @@ server.listen(5000)
 
 Express merupakan sebuah framework yang memudahkan http server yang tadi baru dipelajari
 Express bukan sebuat built in module, jadi harus diinstall dulu dengan
-``npm install express --save``
+`npm install express --save`
 
 Kalau sudah diinstall, di codenya direquire dengan syntax
+
 ```
 const express = require('express')
 const app = express()
 ```
 
 Di dalam express module ada beberapa method yang berguna, antara lain
+
 - app.get
 - app.post
 - app.put
@@ -293,6 +305,7 @@ Di dalam express module ada beberapa method yang berguna, antara lain
 #### app.listen
 
 app.listen digunakan seperti server.listen(). Digunakan untuk komunikasi dengan port communication tertentu. Dan ada callback function yang digunakan untuk dijalankan ketika komunikasi itu terjalin, syntaxnya seperti berikut
+
 ```
 app.listen(5000, () => {
     console.log('Server is listening on port 5000...')
@@ -302,9 +315,38 @@ app.listen(5000, () => {
 #### app.get
 
 app.get itu sama kaya client sedang merequest get dengan url tertentu. Syntaxnya seperti berikut
+
 ```
 app.get('/', (req, res) => {
     console.log('Success')
     res.end('Home Page')
+})
+```
+
+### Express app example
+
+Pada example kali ini, dapat membuat sebuah navbar app seperti pada http app, akan tetapi menggunakan express. Ada banyak kemudahan yang lebih dalam menggunakan express, contohnya adalah syntax yang lebih mudah, dan tidak perlu memanggil file satu2 untuk dikirimkan ke client, dapat dilakukan dengan satu line code, maka express yang akan mengurusnya lebih lanjut, beginilan contohnya
+
+```
+const express = require('express') //Menggunakan module express
+const path = require('path') //Menggunakan pre-build module path
+const app = express() //Membuat object untuk mengakses express
+
+//app.use untuk mendapatkan file2 static yang dibutuhkan
+app.use(express.static('./navbar-app/public'))
+
+//app.get, untuk mendapatkan homepage yaitu '/'
+app.get('/', (req, res) => {
+    res.sendFile(path.resolve(__dirname, './navbar-app/index.html'))
+})
+
+//app.all untuk semua request dari user yang tidak tersedia
+app.all('*', (req, res)=>{
+    res.status(404).send('resource not found')
+})
+
+// app.listen untuk port 5000
+app.listen(5000, () => {
+    console.log('Server is listening on port 5000...')
 })
 ```
