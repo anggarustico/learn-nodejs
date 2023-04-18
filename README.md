@@ -350,3 +350,108 @@ app.listen(5000, () => {
     console.log('Server is listening on port 5000...')
 })
 ```
+
+Pada code di atas, terdapat line app.get yang fungsinya untuk mengirimkan index.html.
+Sebenarnya, index.html juga static, apakah bisa dimasukkan ke express static saja? bisa
+Jika `app.get` pada line code diatas dicomment atau dihapus, server akan berjalan seperti biasa jika index.html masuk di dalam folder public.
+
+### API and SSR
+
+API atau Application Programming Interface khususnya pada Express merupakan sebuah HTTP interface yang bertanggungjawab untuk mengirimkan data berbentuk JSON yang nantinya akan diolah oleh Front-End untuk keperluan tertentu.
+SSR atau Server Side Rendering konsepnya sama seperti API, tapi yang dikirimkan bukan data, melainkan template. Detail mengenai SSR akan dipelajari nanti, sekarang lebih difokuskan ke API terlebih dahulu.
+
+### JSON Basic
+
+API mengirimkan data berupa JSON (Javascript Object Notation). Dari data JSON yang dikirimkan oleh API, Pihak Front-End dapat mengolahnya lebih lanjut. Contoh penggunaan dalam mendapatkan data JSON adalah sebagai berikut
+
+```
+const express = require('express') //Menggunakan module express
+const path = require('path') //Menggunakan pre-build module path
+const app = express() //Membuat object untuk mengakses express
+const { products } = require('./data') //Mengambil object products dari data.js
+
+// Menampilkan JSON dari products
+app.get('/', (req, res)=>{
+    res.json(products)
+})
+
+//app.all untuk semua request dari user yang tidak tersedia
+app.all('*', (req, res)=>{
+    res.status(404).send('resource not found')
+})
+
+// app.listen untuk port 5000
+app.listen(5000, () => {
+    console.log('Server is listening on port 5000...')
+})
+```
+
+### JSON Simple mapping
+
+Pada contoh sebelumnya, kita dapat menampilkan seluruh file JSON. Akan tetapi, kemungkinan besar kita hanya membutuhkan beberapa dari JSON. Hal tersebut dapat dilakukan dengan mapping file JSON tersebut. Contoh codenya adalah sebagai berikut
+
+```
+const express = require('express') //Menggunakan module express
+const path = require('path') //Menggunakan pre-build module path
+const app = express() //Membuat object untuk mengakses express
+const { products } = require('./data') //Mengambil object products dari data.js
+
+// Menampilkan HTML
+app.get('/', (req, res)=>{
+    res.send('<h1>Helo</h1><a href="/api/products">products</a>')
+})
+
+//Mendapatkan API products, dan tidak menampilkan semuanya. Descriptionnya ilang karena .map
+app.get('/api/products', (req, res)=>{
+    const newProducts = products.map((product)=>{
+        const {id, name, image} = product;
+        return {id, name, image}
+    })
+
+    res.json(newProducts)
+})
+
+
+//app.all untuk semua request dari user yang tidak tersedia
+app.all('*', (req, res)=>{
+    res.status(404).send('resource not found')
+})
+
+// app.listen untuk port 5000
+app.listen(5000, () => {
+    console.log('Server is listening on port 5000...')
+})
+```
+
+### Route Params
+
+Bagaimana untuk menggunakan salah satu data dari JSON menggunakan IDnya?
+Untuk itu dapat digunakan route parameters.
+Misalkan kita ingin menampilkan data products 1, maka pada parameter URL dapat dituliskan `/api/products/1`. Bagaimana jika productsnya ada ribuan? Bagaimana cara menuliskan parameter IDnya tersebut?
+Itulah kemudahan menggunakan route parameters.
+Misalkan terlebih dahulu melakukannya dengan cara hardcode
+
+```
+app.get('/api/products/1', (req, res)=>{
+    const singleProduct = products.find((product)=> product.id === 1)
+
+    res.json(singleProduct)
+})
+```
+
+Cara di atas dapat dilakukan jika data yang tersedia sedikit. Akan tetapi, biasanya data API yang tersedia banyak, maka dapat digunakan route Params dengan parameter di URL diganti seperti `/api/product/:productID`. Untuk menampilkan params apa yang direquest oleh user, maka bisa digunakan syntax `console.log(req.params)`. Dan untuk mengolah data /:productID dapat digunakan `req.params`.
+Contohnya seperti berikut
+
+```
+app.get('/api/products/:productID', (req, res)=>{
+    console.log(req.params)
+    const {productID} = req.params
+    const singleProduct = products.find(
+        (product)=> product.id === Number(productID))
+
+    if (!singleProduct){
+        return res.status(404).send('Product does not Exist')
+    }
+    res.json(singleProduct)
+})
+```
