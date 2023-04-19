@@ -455,3 +455,35 @@ app.get('/api/products/:productID', (req, res)=>{
     res.json(singleProduct)
 })
 ```
+
+### Query
+
+Query digunakan untuk mengakses data sesuai dengan kata kunci tertentu atau query tertentu. Query biasanya digunakan dalam url dengan cara seperti `http://hn.algolia.com/api/v1/search?query=foo&tags=story`
+dapat dilihat bahwa query adalah parameter setelah `?`. 
+Untuk menampilkan query parameters pada url dapat digunakan syntax `console.log(req.query)`. Untuk mengakses query parameters itu sendiri dapat digunakan syntax `req.query`.
+Contoh code penggunaan query adalah sebagai berikut
+
+```
+app.get('/api/v1/query', (req, res)=>{
+    console.log(req.query)
+    const { search, limit } = req.query
+    let searchProduct = [...products]
+
+    if(search){
+        searchProduct = searchProduct.filter((product)=>{
+            return product.name.startsWith(search)
+        })
+    }
+
+    if(limit){
+        searchProduct = searchProduct.slice(0, Number(limit))
+    }
+
+    if(searchProduct.length < 1){
+        return res.status(200).json({ search: true, data: []})
+    }
+
+    return res.status(200).json(searchProduct)
+})
+```
+
