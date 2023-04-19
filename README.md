@@ -487,3 +487,143 @@ app.get('/api/v1/query', (req, res)=>{
 })
 ```
 
+### Middleware
+
+Middleware mudahnya merupakan sebuah function yang dapat digunakan untuk beberapa route sekaligus. Middleware ini fungsinya untuk mempermudah dan mempercepat ngoding untuk membuat suatu function untuk beberapa route.
+Jika di web, maka fungsi dari middleware ini adalah untuk menghandle antara request yang diminta oleh user, dan respond yang diberikan oleh server. Contoh dari middleware yang simple adalah logger sebagai berikut
+```
+const logger = (req, res, next)=>{
+    const method = req.method
+    const url = req.url
+    const time = new Date().getFullYear()
+    console.log(method, url, time)
+    next() //Sebuah middleware harus next ke middleware selanjutnya,
+    //Kalo ngga next bakal loading terus di browser
+}
+
+app.get('/', logger, (req, res)=>{
+    res.send('Home')
+})
+
+app.get('/about', logger, (req, res)=>{
+    res.send('About')
+})
+```
+
+### app.use
+
+Middleware biasanya tidak ditulis di file app.js karena nantinya berantakan. Middleware dituliskan di file yang berbeda dengan app.js. Bagaimana menggunakannya? Dan bagaimana menggunakannya di semua route sekaligus?
+app.use merupakan sebuah metode untuk menggunakan sebuah middleware di beberapa route sekaligus. Contoh penggunaannya adalah sebagai berikut
+```
+const express = require('express') 
+const app = express()
+const logger = require('./logger')
+
+app.use('/about', logger)//Bisa tidak menggunakan path untuk semua route
+
+app.get('/', (req, res)=>{
+    res.send('Home')
+})
+
+app.get('/about', (req, res)=>{
+    res.send('About')
+})
+
+app.get('/about/items', (req, res)=>{
+    res.send('About')
+})
+```
+
+### Multiple Middleware
+
+Kita dapat menggunakan beberapa middleware sekaligus. Contohnya sebagai berikut
+```
+const express = require('express') 
+const app = express()
+const logger = require('./logger')
+const authorize = require('./authorize')
+
+app.use([logger, authorize]) //Syntax untuk multiple middleware
+
+app.get('/', (req, res)=>{
+    res.send('Home')
+})
+
+app.get('/about', (req, res)=>{
+    res.send('About')
+})
+
+app.get('/about/items', (req, res)=>{
+    console.log(req.user)
+    res.send('About')
+})
+```
+
+### Additional Middleware Info
+
+Dua middleware yang sebelumnya kita buat adalah middleware yang functionnya kita buat sendiri. Kemungkinan besar kita akan menggunakan middleware yang sudah disediakan. Ada 3 tipe middleware
+1. Own Middleware
+Middleware ini functionnya dibuat sendiri
+2. Express Middleware
+Express menyediakan beberapa middleware contohnya seperti `app.use(express.static('./public))`
+3. Third Party Middleware
+Banyak pihak ketiga yang menyediakan beberapa middleware contohnya morgan seperti berikut `app.use(morgan('tiny'))`
+
+### HTTP METHODS
+
+#### GET
+
+GET merupakan HTTP methods yang berfungsi untuk membaca atau read data. Contoh penggunaannya adalah sebagai berikut
+```
+const express = require('express') 
+const app = express()
+let {people} = require('./data')
+
+app.get('/api/people', (req, res)=>{
+    res.status(200).json({success:true, data: people})
+})
+```
+
+#### POST
+
+POST merupakan HTTP methods yang berfungsi untuk menginput data ke server. Untuk menggunakan methods ini, ada beberapa hal yang harus diperhatikan.
+- Pada bagian front-end, ada code yang mengindikasikan bahwa code tersebut menggunakan POST methods, contohnya seperti berikut
+```
+<form action="/login" method="POST">
+    <h3>Traditional Form</h3>
+    <div class="form-row">
+        <label for="name"> enter name </label>
+        <input type="text" name="name" id="name" autocomplete="false" />
+    </div>
+    <button type="submit" class="block">submit</button>
+</form>
+```
+Pada code ini ada bagian `method="POST"` yang berarti code ini akan menggunakan metode POST. Pada bagian ini juga ada bagian `action="/login"` yang berarti form tersebut saat disubmit akan menulis data ke `/login` bukan membaca data.
+
+Pada bagian server juga harus dipersiapakan untuk mengolah data yang dikirimkan oleh front-end.
+1. Harus mempersiapkan middleware express.urlencoded dengan syntax sebagai berikut
+```
+app.use(express.urlencoded({extended: false}))
+```
+Dengan middleware ini, body yang dikirimkan oleh frontend dapat diolah oleh server
+2. app.post
+Dengan app.post, server dapat mengolah data yang dikirimkan oleh frontend. Object body yang dikirimkan oleh frontend adalah `req.body`. Contohnya adalah sebagai berikut
+```
+app.use(express.urlencoded({extended: false}))
+
+app.post('/login', (req, res)=>{
+    console.log(req.body)
+    const { name } = req.body
+    if(name){
+        res.status(200).send(`Welcome ${name}`)
+    }
+
+    res.status(401).send('Provide data dong bos!')
+})
+```
+
+
+
+
+
+
