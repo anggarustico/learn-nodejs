@@ -118,14 +118,14 @@ Server mengirimkan http messages berupa response ke user, menjawab request dari 
 Untuk lebih jelasnya mengenai http, dapat dilihat disini
 [Course API](https://course-api.com)
 
-## Create Server
+### Create Server
 
 Untuk melanjutkan bagian ini, wajib clone repo node tutorial
 Kemudian masuk ke folder `02-express-tutorial`
 Kemudian lanjut `npm install` untuk mendapatkan dependencies yang dibutuhkan
 Kemudian lanjut `npm start`, jika di console log terdapat "Express Tutorial", maka tutorial sudah siap untuk dilanjutkan
 
-## HTTP Basic
+### HTTP Basic
 
 Untuk create server, dibutuhkan basic http seperti langkah berikut
 
@@ -149,14 +149,14 @@ const server = http.createServer((req, res) => {
    Port Number adalah sebuah komunikasi end point. Buat localhost kali ini bebas
    `server.listen(5000)`
 
-## HTTP Headers
+### HTTP Headers
 
 Jika client ada yang dateng ke server, maka harus ada header mengenai info server tersebut atau metadata. syntax untuk merespon http header adalah `res.writeHead(statusCode, { 'content-type': 'text/html' })`
 `res.writeHead(200, { 'content-type': 'text/html'} )`
 
 Status code dan content-type ini berpengaruh terhadap respon yang akan diberikan server ke client. Kita tidak perlu menghafalkan lebih lanjut mengenai http headers, karena biasanya akan otomatis
 
-## HTTP Request Object
+### HTTP Request Object
 
 Setelah udah bisa ngerespon, mari lanjut mengambil request dari user.
 Ada beberapa method dari req yang berguna, antara lain
@@ -191,7 +191,7 @@ const server = http.createServer((req, res) => {
 server.listen(5000)
 ```
 
-## HTML Files
+### HTML Files
 
 Kita bisa merespon request dari client menggunakan sebuah file, menggunakan readFileSync atau yang Async juga bisa
 yang penting di metadata, content-typenya harus sesuai
@@ -225,7 +225,7 @@ const server = http.createServer((req, res) => {
 server.listen(5000)
 ```
 
-## HTTP App
+### HTTP App
 
 Tadi kita baru bisa membaca dan mengirimkan satu file html dari server ke client. Nah Bagaimana kalau client butuh html, css, dan js untuk diterima? Apa yang harus dilakukan server?
 Pertama yang pasti semua alamat dari file yang dibutuhkan harus ada responsenya, bukan 404. Kemudian tinggal tambahkan if else statementnya sesuai dengan kebutuhan
@@ -621,6 +621,144 @@ app.post('/login', (req, res)=>{
     res.status(401).send('Provide data dong bos!')
 })
 ```
+3. express.json() middleware
+Untuk mengakses data json yang dikirimkan oleh client ke server dapat digunakan middleware express.json() dengan syntax seperti `app.use(express.json())`
+
+Sebenarnya di video course ini ada cara post dengan Javascript di frontendnya langsung menggunakan **axios**, tapi terlalu kompleks untuk dipelajari. Maka bisa lanjut ke methods selanjutnya.
+
+Di video juga dijelaskan mengenai aplikasi **Postman**. Aplikasi Postman memudahkan melakukan HTTP methods tanpa adanya frontend. Postman dapat dipelajari lebih lanjut nantinya karena sekarang masih terlalu kompleks.
+
+#### PUT
+
+PUT merupakan sebuah HTTP methods yang berfungsi untuk client yang ingin merubah atau mengupdate sebuah data dalam server. Pada method PUT, ada dua data yang digunakan untuk mengubah data, yang pertama ada `req.params` untuk mengidentifikasi parameter data mana yang akan diupdate. Identifikasi yang kedua adalah `req.body` untuk mengisi data update yang akan mengganti data yang lama. Contoh penggunaannya adalah sebagai berikut.
+```
+app.put('/api/people/:id', (req, res) => {
+  const { id } = req.params
+  const { name } = req.body
+
+  const person = people.find((person) => person.id === Number(id))
+
+  if (!person) {
+    return res
+      .status(404)
+      .json({ success: false, msg: `no person with id ${id}` })
+  }
+  const newPeople = people.map((person) => {
+    if (person.id === Number(id)) {
+      person.name = name
+    }
+    return person
+  })
+  res.status(200).json({ success: true, data: newPeople })
+})
+```
+
+#### DELETE
+
+DELETE merupakan sebuah HTTP methods yang digunakan untuk mendelete sebuah data di server. Sebenernya sangat mirip dengan put bedanya tidak ada body yang dikirimkan untuk merubah data, hanyak untuk mendelete data saja. Contohnya adalah sebagai berikut.
+```
+app.delete('/api/people/:id', (req, res) => {
+  const person = people.find((person) => person.id === Number(req.params.id))
+  if (!person) {
+    return res
+      .status(404)
+      .json({ success: false, msg: `no person with id ${req.params.id}` })
+  }
+  const newPeople = people.filter(
+    (person) => person.id !== Number(req.params.id)
+  )
+  return res.status(200).json({ success: true, data: newPeople })
+})
+```
+
+### ROUTER
+
+Sebelum ini, di dalam app.js, banyak sekali route yang digunakan, dan banyak sekali route yang hampir sama atau memiliki base yang sama contohnya seperti `/api/people` dengan `/api/people/:id`. Dengan router, routes yang hampir sama dapat dijadikan dalam satu file yang terpisah dengan app.js, dan di dalam app.js akan digunakan menggunakan app.use. Langkah2 untuk menggunakan router adalah sebagai berikut
+1. Buatlah folder baru bernama routes atau router
+2. Di dalam folder tersebut berisi file2 js yang berfungsi untuk menyimpan route2 yang setipe
+3. Di dalam folder ada beberapa line yang dibutuhkan sebagai berikut
+```
+const express = require('express')
+const router = express.Router()
+let { people } = require('../data')
+
+/*
+Routes
+*/
+
+module.exports = router
+```
+4. Di dalam app.js menggunakan router dengan line sebagai berikut
+```
+const people = require('./router/people')
+
+app.use('/api/people', people)
+```
+
+### Router Controller
+
+app.js menjadi rapih saat adanya file terpisah bernama router yang mengolah banyaknya route yang diolah. Akan tetapi, di dalam file router tersebut masih belum rapih, karena function untuk route-route tertentu terkadang panjang dan membuat file router tidak rapih. Oleh karena itu, dibuatnya sebuah file terpisah yang berfungsi untuk mengolah function-function dari router. File terpisah tersebut yang disebut dengan **Controller**.
+Langkah-langkah untuk membuat file controller adalah
+1. Membuat folder terpisah bernama controller atau sejenisnya.
+2. Di dalam folder tersebut buatlah sebuah file `.js` yang namanya sesuai dengan file router untuk memudahkan.
+3. Di dalam file tersebut buatlah sebuah object. Object tersebut berfungsi untuk mengolah function yang akan digunakan pada router. Contohnya adalah sebagai berikut
+Misalkan pada router ada fungsi sebagai berikut
+```
+router.get('/', (req, res) => {
+    res.status(200).json({ success: true, data: people })
+  })
+```
+Fungsi tersebut dibuat dalam controller sebagai berikut
+```
+const getPeople = (req, res) => {
+  res.status(200).json({ success: true, data: people })
+}
+```
+Setelah dibuat controllernya, maka di dalam app.js dapat dibuat sebagai berikut
+```
+const { getPeople } = require('../controller/people')
+
+router.get('/', getPeople)
+```
+
+### Router Syntax Alternative
+
+Dengan adanya controller, syntax penulisan router menjadi jauh lebih rapih. Ada cara lain yang dapat dibilang lebih simple, akan tetapi tidak mempengaruhi kinerja dari code itu sendiri.
+Cara pertama penulisan router adalah sebagai berikut
+```
+const {
+  getPeople,
+  createPerson,
+  createPersonPostman,
+  updatePerson,
+  deletePerson
+} = require('../controller/people')
+
+router.get('/', getPeople)
+router.post('/', createPerson)
+router.post('/postman', createPersonPostman)
+router.put('/:id', updatePerson)  
+router.delete('/:id', deletePerson)
+```
+Cara alternatif penulisan router adalah sebagai berikut
+```
+const {
+  getPeople,
+  createPerson,
+  createPersonPostman,
+  updatePerson,
+  deletePerson
+} = require('../controller/people')
+
+router.route('/').get(getPeople).post(createPerson)
+router.route('/:id').put(updatePerson).delete(deletePerson)
+router.route('/postman').post(createPersonPostman)
+```
+
+## KESIMPULAN
+
+Node.js dan Express.js adalah sebuah framework untuk mengolah server side dari sebuah aplikasi khususnya yang berurusan dengan http. Server side yang berarti menjadi sebuah middleware atau perantara untuk memudahkan komunikasi dan kinerja antara frontend dan backend (database). Setelah mempelajari ini, cobalah mempelajari project-project selanjutnya di
+[FCC Node JS and Express js Projects](https://www.youtube.com/watch?v=qwfE7fSVaZM)
 
 
 
