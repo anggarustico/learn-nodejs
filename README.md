@@ -1,4 +1,4 @@
-# learn-nodejs-notes
+# Learn Node JS
 
 Link Sumber [FCC Node JS and Express js](https://www.youtube.com/watch?v=Oe421EPjeBE&list=LL&index=8)
 
